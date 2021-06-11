@@ -5,7 +5,7 @@
 # Modify the following parameters before running the script
 
 file_list = "/path/file_list.json" # Choose an esgf-search output
-save_path = "path/to/download/" # Make sure '/' is there at the end of the path 
+save_path = "/path/to/download/"
 # Settings end here =========================================================
 
 # Import dependencies
@@ -33,7 +33,7 @@ def download_fallback(url, filename, save_path, filesize, checksum, checksum_typ
     print("Attempting download with fallback method...", flush=True)
     r = requests.get(url, stream=True)
     block_size = 1024*1024 #1 MiB
-    with open(save_path+filename, 'wb') as f:
+    with open(os.path.join(save_path, filename), 'wb') as f:
         for block in tqdm(r.iter_content(block_size), total=filesize//block_size, unit='MiB', ascii=True):
             f.write(block)
 
@@ -43,7 +43,7 @@ def download_fallback(url, filename, save_path, filesize, checksum, checksum_typ
     else:
         algorithm = getattr(hashlib, checksum_type.lower())()
         print("Validating checksum...", flush = True)
-        with open(save_path+filename, 'rb') as f:
+        with open(os.path.join(save_path, filename), 'rb') as f:
             for block in tqdm(iter(lambda: f.read(block_size), b""), total=filesize//block_size, unit='MiB', ascii=True):
                 algorithm.update(block)
 
@@ -57,8 +57,8 @@ def download_fallback(url, filename, save_path, filesize, checksum, checksum_typ
     
 # download
 for file in files:
-    if os.path.isfile(save_path+file["filename"]):
-        if os.stat(save_path+file["filename"]).st_size == file["size"]:
+    if os.path.isfile(os.path.join(save_path, file["filename"])):
+        if os.stat(os.path.join(save_path, file["filename"])).st_size == file["size"]:
             start_download = False
             print("File already exists: "+file["filename"], flush=True)
         else:
@@ -72,4 +72,4 @@ for file in files:
         
         if r1:
             # Fallback method for download
-            r2, v = download_fallback(file["url"][0],file["filename"], save_path, file["size"], file["checksum"], file["checksum_type"].lower())
+            r2, v = download_fallback(file["url"][0], file["filename"], save_path, file["size"], file["checksum"], file["checksum_type"].lower())

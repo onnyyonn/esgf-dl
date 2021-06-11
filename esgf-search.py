@@ -4,7 +4,7 @@
 # Settings =================================================================
 # Modify the following parameters before running the script
 
-savefile = "file_list.json" #This file will later be used as an input in downloading script
+savefile = "/path/file_list.json" #This file will later be used as an input in downloading script
 
 # This is an example query. Modify the query as needed
 # Check documentation for more information on which keys and values can be used
