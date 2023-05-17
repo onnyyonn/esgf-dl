@@ -1,0 +1,7 @@
+name: esgf-dl
+dependencies:
+  - esgf-pyclient
+  - tqdm
+channels:
+  - conda-forge
+  - nodefaults
