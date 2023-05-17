@@ -12,6 +12,10 @@ save_path = "/path/to/download/"
 import json, os, requests, hashlib
 from tqdm import tqdm
 
+# Create save directory if doesn't exist 
+if not os.path.exists(save_path):
+    os.makedirs(save_path)
+
 # Load file list
 with open(file_list, 'r') as f:
     files = json.load(f)
